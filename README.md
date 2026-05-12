@@ -102,8 +102,86 @@ db.indicados.aggregate([
 ```
 
 2.5 Quais categorias existiam na primeira cerimônia (1928) e não existem mais hoje?
-
+R:  desaparecidas: [
+    {
+      _id: 'ART DIRECTION'
+    },
+    {
+      _id: 'ACTRESS'
+    },
+    {
+      _id: 'ENGINEERING EFFECTS'
+    },
+    {
+      _id: 'OUTSTANDING PICTURE'
+    },
+    {
+      _id: 'UNIQUE AND ARTISTIC PICTURE'
+    },
+    {
+      _id: 'WRITING (Adaptation)'
+    },
+    {
+      _id: 'WRITING (Title Writing)'
+    },
+    {
+      _id: 'SPECIAL AWARD'
+    },
+    {
+      _id: 'ACTOR'
+    },
+    {
+      _id: 'WRITING (Original Story)'
+    },
+    {
+      _id: 'DIRECTING (Dramatic Picture)'
+    },
+    {
+      _id: 'DIRECTING (Comedy Picture)'
+    }
+  ]
+}
+```
+db.indicados.aggregate([ {
+    $facet: {
+      categorias_1928: [
+        { $match: { ano_cerimonia: 1928 } },
+        { $group: { _id: "$categoria" } }
+      ],
+      categorias_recentes: [
+        { $match: { ano_cerimonia: { $gte: 2020 } } },
+        { $group: { _id: "$categoria" } }
+      ]
+    }
+  }, {
+    $project: {
+      desaparecidas: {
+        $filter: {
+          input: "$categorias_1928",
+          as: "cat",
+          cond: {
+            $not: {
+              $in: ["$$cat._id", "$categorias_recentes._id"]
+            }
+          }
+        }
+      }
+    }
+  }
+])
+```
 
 2.6 Liste todas as categorias que contêm a palavra "DIRECTING" no nome.
+
+R: 'DIRECTING',
+  'DIRECTING (Comedy Picture)',
+  'DIRECTING (Dramatic Picture)'
+```
+db.indicados.distinct(
+  "categoria",
+  { categoria: /DIRECTING/i }
+)
+```
+  
 
 
