@@ -1,5 +1,7 @@
 ## Oscar - Exercícios MongoDB
 
+## Nível 1 -
+
 1.1 Quantos registros existem na coleção de indicados ao Oscar?
 
 R: 11104
@@ -32,3 +34,18 @@ R: 98
 ```
 db.indicados.distinct("cerimonia").length
 ```
+---
+## Nível 2 - Explorando Categorias 
+2.1 Quantas indicações existem para cada categoria? Agrupe por categoria e ordene da mais frequente para a menos frequente.
+
+2.2 Qual categoria teve mais indicações ao longo da história do Oscar?
+
+2.3 Qual categoria teve menos indicações ao longo da história?
+
+2.4 A partir de que ano a categoria "ACTRESS" deixou de existir? (Dica: procure a última cerimônia com essa categoria)
+
+2.5 Quais categorias existiam na primeira cerimônia (1928) e não existem mais hoje?
+
+2.6 Liste todas as categorias que contêm a palavra "DIRECTING" no nome.
+
+
