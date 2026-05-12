@@ -38,13 +38,71 @@ db.indicados.distinct("cerimonia").length
 ## Nível 2 - Explorando Categorias 
 2.1 Quantas indicações existem para cada categoria? Agrupe por categoria e ordene da mais frequente para a menos frequente.
 
+R: 
+```
+{
+    $group: {
+      _id: "$categoria",
+      total_indicacoes: { $sum: 1 }
+    }
+  },
+  {
+    $sort: { total_indicacoes: -1 }
+  }
+])
+
+#Mais frequente
+db.indicados.aggregate([
+  { $group: { _id: "$categoria", total: { $sum: 1 } } },
+  { $sort: { total: -1 } },
+  { $limit: 1 }
+])
+
+#Menos frequente
+db.indicados.aggregate([
+  { $group: { _id: "$categoria", total: { $sum: 1 } } },
+  { $sort: { total: 1 } },
+  { $limit: 1 }
+])
+
+```
+
 2.2 Qual categoria teve mais indicações ao longo da história do Oscar?
 
+R:  _id: 'DIRECTING',
+  total: 479 
+```
+db.indicados.aggregate([
+  { $group: { _id: "$categoria", total: { $sum: 1 } } },
+  { $sort: { total: -1 } },
+  { $limit: 1 }
+])
+
+```
 2.3 Qual categoria teve menos indicações ao longo da história?
 
+R:_id: 'AWARD OF COMMENDATION',
+  total: 1
+```
+db.indicados.aggregate([
+  { $group: { _id: "$categoria", total: { $sum: 1 } } },
+  { $sort: { total: 1 } },
+  { $limit: 1 }
+])
+```
 2.4 A partir de que ano a categoria "ACTRESS" deixou de existir? (Dica: procure a última cerimônia com essa categoria)
+R: 1976
+```
+db.indicados.aggregate([
+  { $match: { categoria: "ACTRESS" } },
+  { $sort: { ano_cerimonia: -1 } },
+  { $limit: 1 },
+  { $project: { ano_cerimonia: 1, cerimonia: 1, _id: 0 } }
+])
+```
 
 2.5 Quais categorias existiam na primeira cerimônia (1928) e não existem mais hoje?
+
 
 2.6 Liste todas as categorias que contêm a palavra "DIRECTING" no nome.
 
