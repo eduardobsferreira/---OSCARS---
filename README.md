@@ -279,4 +279,61 @@ db.indicados.countDocuments({nome_do_indicado: "Denzel Washington"})
 ```
 3.12 Liste todos os Oscars que Denzel Washington ganhou (ano, categoria, filme).
 R:
+```
+db.indicados.find(
+  { nome_do_indicado: "Denzel Washington" },
+  { ano_cerimonia: 1, categoria: 1, nome_do_filme: 1, vencedor: 1, _id: 0 }
+).sort({ ano_cerimonia: 1 })
+```
+---
+## Nível 4: Vencedores Históricos
+4.1 Quem ganhou o primeiro Oscar para Melhor Atriz (ACTRESS)? Em que ano e por qual filme?
+
+R: Janet Gaynor
+```
+db.indicados.findOne(
+  { categoria: "ACTRESS", vencedor: "true" },
+  { ano_cerimonia: 1, nome_do_indicado: 1, nome_do_filme: 1, _id: 0 },
+  { sort: { ano_cerimonia: 1 } }
+)
+```
+4.2 Quem ganhou o primeiro Oscar para Melhor Ator (ACTOR)? Em que ano e por qual filme?
+R: Emil Jannings
+```
+db.indicados.findOne(
+  { categoria: "ACTOR", vencedor: "true" },
+  { ano_cerimonia: 1, nome_do_indicado: 1, nome_do_filme: 1, _id: 0 },
+  { sort: { ano_cerimonia: 1 } }
+)
+```
+
+4.3 Quantos vencedores existem ao todo na base de dados?
+R: 2507
+```
+db.indicados.countDocuments({ vencedor: "true" })
+```
+
+4.4 Liste todos os filmes que ganharam o Oscar de Melhor Filme (categoria "OUTSTANDING PICTURE" ou "BEST PICTURE").
+R: 
+```
+db.indicados.find(
+  {
+    categoria: { $in: ["OUTSTANDING PICTURE", "BEST PICTURE"] },
+    vencedor: "true"
+  },
+  { ano_cerimonia: 1, categoria: 1, nome_do_filme: 1, _id: 0 }
+).sort({ ano_cerimonia: 1 })
+```
+
+4.5 Quantos filmes diferentes já ganharam o Oscar?
+R:1354
+```
+db.indicados.aggregate([
+  { $match: { vencedor: "true" } },
+  { $group: { _id: "$nome_do_filme" } },
+  { $count: "total_filmes_vencedores" }
+])
+```
+---
+
 
