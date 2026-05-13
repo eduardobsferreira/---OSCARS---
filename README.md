@@ -183,7 +183,7 @@ db.indicados.distinct(
 )
 ```
   
-## Nível 3 
+## Nível 3 - : Atores e Atrizes Famosos
 
 ## Natalie Portman
 
@@ -251,3 +251,32 @@ db.indicados.find(
 ).sort({ ano_cerimonia: 1 })
 ```
 ---
+## Amy Adams
+3.8 Amy Adams já ganhou algum Oscar?
+R: Não 
+```
+db.indicados.countDocuments({nome_do_indicado: "Amy Adams", vencedor: "true"})
+```
+3.9 Quantas vezes Amy Adams foi indicada sem ganhar?
+R: 6 
+```
+db.indicados.find(
+  { nome_do_indicado: "Amy Adams" },
+  { ano_cerimonia: 1, nome_do_filme: 1, _id: 0 }
+).sort({ ano_cerimonia: 1 })
+```
+---
+Denzel Washington
+3.10 Denzel Washington já ganhou algum Oscar?
+R: 2
+```
+db.indicados.countDocuments({nome_do_indicado: "Denzel Washington", vencedor: "true"})
+```
+3.11 Quantas vezes Denzel Washington foi indicado ao Oscar?
+R: 9 
+```
+db.indicados.countDocuments({nome_do_indicado: "Denzel Washington"})
+```
+3.12 Liste todos os Oscars que Denzel Washington ganhou (ano, categoria, filme).
+R:
+
