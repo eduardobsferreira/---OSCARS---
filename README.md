@@ -232,4 +232,22 @@ db.indicados.find(
 ```
 ---
 ## Viola Davis
-
+3.5 Quantas vezes Viola Davis foi indicada ao Oscar?
+R: 4 
+```
+db.indicados.countDocuments({nome_do_indicado: "Viola Davis"})
+```
+3.6 Quantos Oscars Viola Davis ganhou?
+R: 1
+```
+db.indicados.countDocuments({nome_do_indicado: "Viola Davis", vencedor: "true"})
+```
+3.7 Por quais filmes Viola Davis foi indicada?
+R:
+```
+db.indicados.find(
+  { nome_do_indicado: "Viola Davis" },
+  { ano_cerimonia: 1, nome_do_filme: 1, _id: 0 }
+).sort({ ano_cerimonia: 1 })
+```
+---
