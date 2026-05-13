@@ -185,4 +185,51 @@ db.indicados.distinct(
   
 ## Nível 3 
 
+## Natalie Portman
+
+3.1 Quantas vezes Natalie Portman foi indicada ao Oscar?
+
+R: 3
+```
+db.indicados.countDocuments({nome_do_indicado: "Natalie Portman"})
+```
+
+3.2 Quantos Oscars Natalie Portman ganhou?
+R: 1
+```
+db.indicados.countDocuments({nome_do_indicado: "Natalie Portman", vencedor:"true"})
+```
+3.3 Em quais anos e por quais filmes Natalie Portman foi indicada?
+R: {
+  ano_cerimonia: 2005,
+  nome_do_filme: 'Closer'
+}
+{
+  ano_cerimonia: 2011,
+  nome_do_filme: 'Black Swan'
+}
+{
+  ano_cerimonia: 2011,
+  nome_do_filme: 'Black Swan'
+}
+```
+db.indicados.find(
+  { nome_do_indicado: "Natalie Portman" },
+  { ano_cerimonia: 1, nome_do_filme: 1, _id: 0 }
+).sort({ ano_cerimonia: 1 })
+```
+
+
+
+3.4 Liste todas as indicações de Natalie Portman mostrando: ano, categoria, filme e se venceu.
+
+R: 
+```
+db.indicados.find(
+  { nome_do_indicado: "Natalie Portman" },
+  { ano_cerimonia: 1, categoria: 1, nome_do_filme: 1, vencedor: 1, _id: 0 }
+).sort({ ano_cerimonia: 1 })
+```
+---
+## Viola Davis
 
