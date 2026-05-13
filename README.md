@@ -335,5 +335,39 @@ db.indicados.aggregate([
 ])
 ```
 ---
+## Nível 5 - Análise de Indicações
 
+5.1 Quais atores/atrizes foram indicados mais de uma vez? Liste o nome e o número de indicações.
 
+R: 
+```
+db.indicados.aggregate([
+  { $group: { _id: "$nome_do_indicado", total: { $sum: 1 } } },
+  { $match: { total: { $gt: 1 } } },
+  { $sort: { total: -1 } }
+])
+```
+
+5.2 Qual ator ou atriz tem o maior número de indicações na história do Oscar?
+R: 'Metro-Goldwyn-Mayer
+```
+db.indicados.aggregate([
+  { $group: { _id: "$nome_do_indicado", total: { $sum: 1 } } },
+  { $sort: { total: -1 } },
+  { $limit: 1 }
+])
+```
+
+5.3 Quais atores foram indicados mais de 3 vezes, mas nunca ganharam?
+R:
+
+5.4 Encontre todos os artistas que foram indicados em categorias diferentes (ex: ator e diretor).
+R:
+
+5.5 Quantos indicados têm exatamente 1 indicação na história?
+R:
+
+5.6 Qual o maior números de indicados em um único ano? Essa é uma pergunta franca.
+R:
+
+---
