@@ -360,14 +360,136 @@ db.indicados.aggregate([
 
 5.3 Quais atores foram indicados mais de 3 vezes, mas nunca ganharam?
 R:
+```
+db.indicados.aggregate([
+  {
+    $group: {
+      _id: "$nome_do_indicado",
+      total_indicacoes: { $sum: 1 },
+      total_vitorias: {
+        $sum: { $cond: [{ $eq: ["$vencedor", "true"] }, 1, 0] }
+      }
+    }
+  },
+  {
+    $match: {
+      total_indicacoes: { $gt: 3 },
+      total_vitorias: 0
+    }
+  },
+  { $sort: { total_indicacoes: -1 } }
+])
+```
+
+
+
 
 5.4 Encontre todos os artistas que foram indicados em categorias diferentes (ex: ator e diretor).
 R:
+```
+db.indicados.aggregate([
+  {
+    $group: {
+      _id: "$nome_do_indicado",
+      categorias: { $addToSet: "$categoria" }
+    }
+  },
+  {
+    $match: {
+      $expr: { $gt: [{ $size: "$categorias" }, 1] }
+    }
+  },
+  { $sort: { _id: 1 } }
+])
+```
+
 
 5.5 Quantos indicados têm exatamente 1 indicação na história?
-R:
+R:5731
+```
+db.indicados.aggregate([
+  { $group: { _id: "$nome_do_indicado", total: { $sum: 1 } } },
+  { $match: { total: 1 } },
+  { $count: "total_com_1_indicacao" }
+])
+```
 
 5.6 Qual o maior números de indicados em um único ano? Essa é uma pergunta franca.
-R:
+R: 1943 
+
+```
+db.indicados.aggregate([
+  { $group: { _id: "$ano_cerimonia", total_indicacoes: { $sum: 1 } } },
+  { $sort: { total_indicacoes: -1 } },
+  { $limit: 1 }
+])
+```
 
 ---
+
+## Nível 6: Análise de Filmes
+## Toy Story
+
+6.1 A série de filmes Toy Story ganhou Oscars em quais anos?
+```
+db.indicados.find(
+  { nome_do_filme: /toy story/i, vencedor: "true" },
+  { ano_cerimonia: 1, nome_do_filme: 1, categoria: 1, _id: 0 }
+).sort({ ano_cerimonia: 1 })
+```
+
+6.2 Quantas indicações a franquia Toy Story recebeu no total?
+```
+db.indicados.countDocuments({ nome_do_filme: /toy story/i })
+```
+
+6.3 Em quais categorias os filmes Toy Story foram indicados?
+```
+db.indicados.distinct(
+  "categoria",
+  { nome_do_filme: /toy story/i }
+)
+```
+
+## Crash
+6.4 Em qual edição do Oscar o filme "Crash" concorreu?
+```
+db.indicados.find(
+  { nome_do_filme: /^crash$/i },
+  { ano_cerimonia: 1, cerimonia: 1, _id: 0 }
+).sort({ ano_cerimonia: 1 })
+```
+
+6.5 Quantas indicações o filme "Crash" recebeu?
+```
+db.indicados.countDocuments({ nome_do_filme: /^crash$/i })
+```
+
+6.6 "Crash" ganhou o Oscar de Melhor Filme?
+```
+db.indicados.findOne({
+  nome_do_filme: /^crash$/i,
+  categoria: { $in: ["BEST PICTURE", "OUTSTANDING PICTURE"] },
+  vencedor: "true"
+})
+```
+
+## Central do Brasil
+6.7 O filme "Central do Brasil" aparece no banco de dados?
+R: Não 
+```
+db.indicados.countDocuments({ nome_do_filme: /central do brasil/i })
+```
+6.8 Se sim, quantas indicações "Central do Brasil" recebeu?
+R: Não tem essa informação na base, mas o filme recebeu 2 indicações: Melhor filme estrangeiro e de melhor atriz para a Fernanda Montenegro. 
+
+
+
+
+
+
+
+
+
+
+
