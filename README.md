@@ -266,7 +266,7 @@ db.indicados.find(
 ).sort({ ano_cerimonia: 1 })
 ```
 ---
-Denzel Washington
+## Denzel Washington
 3.10 Denzel Washington já ganhou algum Oscar?
 R: 2
 ```
